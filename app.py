@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from models import db, Customer, User
 from datetime import datetime
+from functools import wraps
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -22,11 +23,11 @@ with app.app_context():
 
 
 def login_required(f):
+    @wraps(f)
     def wrapper(*args, **kwargs):
         if 'user_id' not in session:
             return redirect(url_for('login'))
         return f(*args, **kwargs)
-    wrapper.__name__ = f.__name__
     return wrapper
 
 

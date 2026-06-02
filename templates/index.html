@@ -81,7 +81,7 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">总付费金额</div>
-                    <div class="stat-value">¥{{ total_amount }}</div>
+                    <div class="stat-value">¥{{ "%.2f"|format(total_amount|float) }}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">已付费</div>
@@ -116,7 +116,7 @@
                     <div class="customer-info">
                         <span>📱 {{ c.phone or '-' }}</span>
                         <span>🏠 {{ c.city or '-' }}</span>
-                        <span>💰 ¥{{ c.payment_amount }}</span>
+                        <span>💰 ¥{{ "%.2f"|format(c.payment_amount|float) }}</span>
                         <span>📅 {{ c.join_date.strftime('%Y-%m-%d') if c.join_date else '-' }}</span>
                     </div>
                     <div class="customer-actions">

@@ -51,6 +51,9 @@ class Customer(db.Model):
             'team_size': self.team_size or '',
             'project_share': self.project_share or '',
             'project_fee': self.project_fee or '',
+            'docking_sort': self.docking_sort or '',
+            'join_date': self.join_date.strftime(date_format) if self.join_date else '',
+            'remark': self.remark or '',
             'created_at': self.created_at.strftime(date_format) if self.created_at else '',
             'updated_at': self.updated_at.strftime(date_format) if self.updated_at else ''
         }

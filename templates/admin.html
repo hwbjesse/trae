@@ -45,8 +45,8 @@
             <a href="{{ url_for('index') }}" class="back-link">← 返回</a>
         </div>
 
-        <div class="card">
-            <form method="post">
+        <form method="post">
+            <div class="card">
                 <div class="form-group">
                     <label>当前账号</label>
                     <input type="text" value="{{ current_user.username }}" disabled>
