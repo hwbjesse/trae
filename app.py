@@ -96,7 +96,18 @@ def index():
 
     total_amount = sum(c.payment_amount or 0 for c in customers)
 
-    return render_template('index.html', customers=customers, search=search, total_amount=total_amount)
+    total_project_fee = 0
+    for c in customers:
+        try:
+            total_project_fee += float(c.project_fee) if c.project_fee else 0
+        except (ValueError, TypeError):
+            pass
+
+    pending_full_count = sum(1 for c in customers if c.payment_status != '付全款')
+
+    return render_template('index.html', customers=customers, search=search,
+                           total_amount=total_amount, total_project_fee=total_project_fee,
+                           pending_full_count=pending_full_count)
 
 
 @app.route('/add', methods=['GET', 'POST'])

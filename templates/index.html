@@ -86,16 +86,16 @@
                     <div class="stat-value">{{ customers|length }}</div>
                 </div>
                 <div class="stat-item">
+                    <div class="stat-label">总收费金额</div>
+                    <div class="stat-value">¥{{ "%.2f"|format(total_project_fee|float) }}</div>
+                </div>
+                <div class="stat-item">
                     <div class="stat-label">总付费金额</div>
                     <div class="stat-value">¥{{ "%.2f"|format(total_amount|float) }}</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">已付费</div>
-                    <div class="stat-value">{{ customers|selectattr('payment_status', 'equalto', '已付费')|list|length }}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">待付费</div>
-                    <div class="stat-value">{{ customers|selectattr('payment_status', 'equalto', '待付费')|list|length }}</div>
+                    <div class="stat-label">待付全</div>
+                    <div class="stat-value">{{ pending_full_count }}</div>
                 </div>
             </div>
         </div>
@@ -111,12 +111,10 @@
                 <div class="customer-item">
                     <div class="customer-header">
                         {{ c.name }}
-                        {% if c.payment_status == '已付费' %}
-                        <span class="badge badge-success">已付费</span>
-                        {% elif c.payment_status == '待付费' %}
-                        <span class="badge badge-warning">待付费</span>
-                        {% elif c.payment_status == '退款' %}
-                        <span class="badge badge-danger">退款</span>
+                        {% if c.payment_status == '付全款' %}
+                        <span class="badge badge-success">付全款</span>
+                        {% elif c.payment_status == '付定金' %}
+                        <span class="badge badge-warning">付定金</span>
                         {% endif %}
                     </div>
 

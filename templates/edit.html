@@ -83,10 +83,8 @@ textarea { resize: vertical; min-height: 100px; }
 <label>付费情况</label>
 <select name="payment_status">
 <option value="">请选择</option>
-<option value="待付费" {% if customer.payment_status == '待付费' %}selected{% endif %}>待付费</option>
-<option value="已付费" {% if customer.payment_status == '已付费' %}selected{% endif %}>已付费</option>
-<option value="部分付费" {% if customer.payment_status == '部分付费' %}selected{% endif %}>部分付费</option>
-<option value="退款" {% if customer.payment_status == '退款' %}selected{% endif %}>退款</option>
+<option value="付定金" {% if customer.payment_status == '付定金' %}selected{% endif %}>付定金</option>
+<option value="付全款" {% if customer.payment_status == '付全款' %}selected{% endif %}>付全款</option>
 </select>
 </div>
 <div class="form-group">
