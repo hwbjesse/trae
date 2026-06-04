@@ -1,3 +1,15 @@
+"""
+OPC客户管理系统 - 主应用
+
+!!! 新增字段检查清单（重要）!!!
+每次在 models.py 中新增字段后，必须同步修改以下 4 处：
+1. /add 路由     -> 从 request.form 读取并传给 Customer()
+2. /edit 路由    -> 从 request.form 读取并赋值给 customer.xxx
+3. add.html      -> 添加对应的表单控件
+4. edit.html     -> 添加对应的表单控件（带 selected/value 回显）
+5. index.html    -> 客户卡片中展示该字段
+"""
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from models import db, Customer, User
 from datetime import datetime
@@ -141,6 +153,7 @@ def add():
             contract_no=request.form.get('contract_no', '').strip(),
             payment_status=request.form.get('payment_status', '').strip(),
             payment_amount=payment_amount,
+            payment_method=request.form.get('payment_method', '').strip(),
             city=request.form.get('city', '').strip(),
             team_size=request.form.get('team_size', '').strip(),
             project_share=request.form.get('project_share', '').strip(),
@@ -188,6 +201,7 @@ def edit(id):
         customer.contract_no = request.form.get('contract_no', '').strip()
         customer.payment_status = request.form.get('payment_status', '').strip()
         customer.payment_amount = payment_amount
+        customer.payment_method = request.form.get('payment_method', '').strip()
         customer.city = request.form.get('city', '').strip()
         customer.team_size = request.form.get('team_size', '').strip()
         customer.project_share = request.form.get('project_share', '').strip()

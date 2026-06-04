@@ -181,6 +181,10 @@
                                 <span class="info-label">付费金额:</span>
                                 <span class="info-value">¥{{ "%.2f"|format(c.payment_amount|float) }}</span>
                             </div>
+                            <div class="info-item">
+                                <span class="info-label">付款方式:</span>
+                                <span class="info-value">{{ c.payment_method or '-' }}</span>
+                            </div>
                         </div>
                     </div>
 
