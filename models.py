@@ -17,6 +17,12 @@ class User(db.Model):
         return self.password == hashlib.sha256(pwd.encode()).hexdigest()
 
 
+class Notice(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, default='', comment='公告内容')
+    updated_at = db.Column(db.Date, default=datetime.now, onupdate=datetime.now)
+
+
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, comment='客户姓名')
@@ -32,6 +38,7 @@ class Customer(db.Model):
     project_share = db.Column(db.String(100), comment='项目分成')
     project_fee = db.Column(db.String(100), comment='项目收费')
     docking_sort = db.Column(db.String(50), comment='对接排序')
+    service_progress = db.Column(db.String(50), comment='服务进度')
     join_date = db.Column(db.Date, comment='参加项目时间')
     remark = db.Column(db.Text, comment='客户备注')
     created_at = db.Column(db.Date, default=datetime.now)
@@ -54,6 +61,7 @@ class Customer(db.Model):
             'project_share': self.project_share or '',
             'project_fee': self.project_fee or '',
             'docking_sort': self.docking_sort or '',
+            'service_progress': self.service_progress or '',
             'join_date': self.join_date.strftime(date_format) if self.join_date else '',
             'remark': self.remark or '',
             'created_at': self.created_at.strftime(date_format) if self.created_at else '',

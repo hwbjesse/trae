@@ -11,7 +11,7 @@ OPC客户管理系统 - 主应用
 """
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models import db, Customer, User
+from models import db, Customer, User, Notice
 from datetime import datetime
 from functools import wraps
 
@@ -92,6 +92,24 @@ def admin():
     return render_template('admin.html', current_user=user)
 
 
+@app.route('/notice', methods=['GET', 'POST'])
+@login_required
+def notice():
+    notice = Notice.query.first()
+    if not notice:
+        notice = Notice(content='')
+        db.session.add(notice)
+        db.session.commit()
+
+    if request.method == 'POST':
+        notice.content = request.form.get('notice_content', '').strip()
+        db.session.commit()
+        flash('公告已保存', 'success')
+        return redirect(url_for('notice'))
+
+    return render_template('notice.html', notice=notice)
+
+
 @app.route('/')
 @login_required
 def index():
@@ -117,9 +135,22 @@ def index():
 
     pending_full_count = sum(1 for c in customers if c.payment_status != '付全款')
 
+    payment_methods = {'收钱吧': 0, '银行卡': 0, '微信': 0}
+    for c in customers:
+        method = c.payment_method
+        if method in payment_methods:
+            payment_methods[method] += c.payment_amount or 0
+
+    notice = Notice.query.first()
+    if not notice:
+        notice = Notice(content='')
+        db.session.add(notice)
+        db.session.commit()
+
     return render_template('index.html', customers=customers, search=search,
                            total_amount=total_amount, total_project_fee=total_project_fee,
-                           pending_full_count=pending_full_count)
+                           pending_full_count=pending_full_count,
+                           payment_methods=payment_methods, notice=notice)
 
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -159,6 +190,7 @@ def add():
             project_share=request.form.get('project_share', '').strip(),
             project_fee=request.form.get('project_fee', '').strip(),
             docking_sort=request.form.get('docking_sort', '').strip(),
+            service_progress=request.form.get('service_progress', '').strip(),
             join_date=join_date,
             remark=request.form.get('remark', '').strip()
         )
@@ -207,6 +239,7 @@ def edit(id):
         customer.project_share = request.form.get('project_share', '').strip()
         customer.project_fee = request.form.get('project_fee', '').strip()
         customer.docking_sort = request.form.get('docking_sort', '').strip()
+        customer.service_progress = request.form.get('service_progress', '').strip()
         customer.remark = request.form.get('remark', '').strip()
         db.session.commit()
         flash('客户信息已更新', 'success')

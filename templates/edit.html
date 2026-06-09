@@ -127,6 +127,17 @@ textarea { resize: vertical; min-height: 100px; }
 <input type="text" name="contract_no" value="{{ customer.contract_no }}">
 </div>
 <div class="form-group">
+<label>服务进度</label>
+<select name="service_progress">
+<option value="">请选择</option>
+<option value="待开展" {% if customer.service_progress == '待开展' %}selected{% endif %}>待开展</option>
+<option value="已建群" {% if customer.service_progress == '已建群' %}selected{% endif %}>已建群</option>
+<option value="已选品指导" {% if customer.service_progress == '已选品指导' %}selected{% endif %}>已选品指导</option>
+<option value="正常合作中" {% if customer.service_progress == '正常合作中' %}selected{% endif %}>正常合作中</option>
+<option value="学习选品后退出" {% if customer.service_progress == '学习选品后退出' %}selected{% endif %}>学习选品后退出</option>
+</select>
+</div>
+<div class="form-group">
 <label>客户备注</label>
 <textarea name="remark">{{ customer.remark or '' }}</textarea>
 </div>

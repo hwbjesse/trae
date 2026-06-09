@@ -33,10 +33,15 @@
 
         .customer-item { padding: 15px; }
         .customer-header { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .customer-header .badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+        .customer-header .badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; margin-left: 4px; }
+        .customer-header .badge:first-child { margin-left: 0; }
         .badge-success { background: #e6f7e6; color: #52c41a; }
         .badge-warning { background: #fff7cc; color: #faad14; }
         .badge-danger { background: #fff1f0; color: #ff4d4f; }
+        .badge-info { background: #e6f7ff; color: #1890ff; }
+        .badge-purple { background: #f9f0ff; color: #722ed1; }
+        .badge-orange { background: #fff7e6; color: #fa8c16; }
+        .badge-gray { background: #f5f5f5; color: #999; }
 
         .info-section { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed #f0f0f0; }
         .info-section:last-of-type { border-bottom: none; margin-bottom: 0; }
@@ -47,6 +52,16 @@
         .info-value { color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .info-full { grid-column: 1 / -1; }
         .info-full .info-value { white-space: normal; word-break: break-all; }
+        .stats-sub { background: white; border-radius: 12px; padding: 12px 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .stats-sub-title { font-size: 12px; color: #999; margin-bottom: 10px; }
+        .stats-sub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .stats-sub-item { text-align: center; }
+        .stats-sub-label { color: #999; font-size: 11px; margin-bottom: 2px; }
+        .stats-sub-value { color: #333; font-size: 15px; font-weight: 600; }
+        .notice-board { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 12px; padding: 14px; margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start; }
+        .notice-icon { font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+        .notice-content { font-size: 14px; color: #8c6f00; line-height: 1.6; white-space: pre-wrap; word-break: break-all; flex: 1; }
+        .notice-empty { font-size: 14px; color: #d9b300; }
 
         .customer-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f5f5f5; }
         .customer-actions button { flex: 1; padding: 10px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
@@ -70,9 +85,19 @@
             {% endfor %}
         {% endwith %}
 
+        {% if notice and notice.content %}
+        <div class="notice-board">
+            <span class="notice-icon">📢</span>
+            <div class="notice-content">{{ notice.content }}</div>
+            <a href="{{ url_for('notice') }}" style="flex-shrink:0; color:#999; text-decoration:none; font-size:13px; padding:2px 6px;">✏️</a>
+        </div>
+        {% endif %}
+
         <div class="header">
             <h1>📋 OPC客户管理</h1>
             <div class="header-actions">
+                <a href="{{ url_for('notice') }}" class="header-link">📢</a>
+                <span class="header-sep">|</span>
                 <a href="{{ url_for('admin') }}" class="header-link">⚙️</a>
                 <span class="header-sep">|</span>
                 <a href="{{ url_for('logout') }}" class="header-link">🚪</a>
@@ -100,6 +125,18 @@
             </div>
         </div>
 
+        <div class="stats-sub">
+            <div class="stats-sub-title">💳 付款方式金额</div>
+            <div class="stats-sub-grid">
+                {% for method, amount in payment_methods.items() %}
+                <div class="stats-sub-item">
+                    <div class="stats-sub-label">{{ method }}</div>
+                    <div class="stats-sub-value">¥{{ "%.2f"|format(amount|float) }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
         <form class="search-box" method="get">
             <input type="text" name="search" placeholder="搜索姓名、手机号..." value="{{ search }}">
             <button type="submit" class="btn btn-primary">搜索</button>
@@ -110,12 +147,25 @@
             <div class="card">
                 <div class="customer-item">
                     <div class="customer-header">
-                        {{ c.name }}
+                        <span>{{ c.name }}</span>
+                        <span>
                         {% if c.payment_status == '付全款' %}
                         <span class="badge badge-success">付全款</span>
                         {% elif c.payment_status == '付定金' %}
                         <span class="badge badge-warning">付定金</span>
                         {% endif %}
+                        {% if c.service_progress == '待开展' %}
+                        <span class="badge badge-gray">{{ c.service_progress }}</span>
+                        {% elif c.service_progress == '已建群' %}
+                        <span class="badge badge-info">{{ c.service_progress }}</span>
+                        {% elif c.service_progress == '已选品指导' %}
+                        <span class="badge badge-purple">{{ c.service_progress }}</span>
+                        {% elif c.service_progress == '正常合作中' %}
+                        <span class="badge badge-success">{{ c.service_progress }}</span>
+                        {% elif c.service_progress == '学习选品后退出' %}
+                        <span class="badge badge-orange">{{ c.service_progress }}</span>
+                        {% endif %}
+                        </span>
                     </div>
 
                     <div class="info-section">
@@ -162,6 +212,10 @@
                             <div class="info-item">
                                 <span class="info-label">协议编号:</span>
                                 <span class="info-value">{{ c.contract_no or '-' }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">服务进度:</span>
+                                <span class="info-value">{{ c.service_progress or '-' }}</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">项目分成:</span>
