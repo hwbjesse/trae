@@ -239,6 +239,10 @@
                                 <span class="info-label">付款方式:</span>
                                 <span class="info-value">{{ c.payment_method or '-' }}</span>
                             </div>
+                            <div class="info-item">
+                                <span class="info-label">退款金额:</span>
+                                <span class="info-value">¥{{ "%.2f"|format(c.refund_amount|float) }}</span>
+                            </div>
                         </div>
                     </div>
 

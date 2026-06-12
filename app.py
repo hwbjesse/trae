@@ -168,6 +168,12 @@ def add():
         except:
             payment_amount = 0
 
+        refund_amount = request.form.get('refund_amount', '0').strip()
+        try:
+            refund_amount = float(refund_amount) if refund_amount else 0
+        except:
+            refund_amount = 0
+
         join_date_str = request.form.get('join_date', '').strip()
         join_date = None
         if join_date_str:
@@ -185,6 +191,7 @@ def add():
             payment_status=request.form.get('payment_status', '').strip(),
             payment_amount=payment_amount,
             payment_method=request.form.get('payment_method', '').strip(),
+            refund_amount=refund_amount,
             city=request.form.get('city', '').strip(),
             team_size=request.form.get('team_size', '').strip(),
             project_share=request.form.get('project_share', '').strip(),
@@ -217,6 +224,12 @@ def edit(id):
         except:
             payment_amount = 0
 
+        refund_amount = request.form.get('refund_amount', '0').strip()
+        try:
+            refund_amount = float(refund_amount) if refund_amount else 0
+        except:
+            refund_amount = 0
+
         join_date_str = request.form.get('join_date', '').strip()
         if join_date_str:
             try:
@@ -234,6 +247,7 @@ def edit(id):
         customer.payment_status = request.form.get('payment_status', '').strip()
         customer.payment_amount = payment_amount
         customer.payment_method = request.form.get('payment_method', '').strip()
+        customer.refund_amount = refund_amount
         customer.city = request.form.get('city', '').strip()
         customer.team_size = request.form.get('team_size', '').strip()
         customer.project_share = request.form.get('project_share', '').strip()

@@ -33,6 +33,7 @@ class Customer(db.Model):
     payment_status = db.Column(db.String(50), comment='付费情况')
     payment_amount = db.Column(db.Float, default=0, comment='付费金额')
     payment_method = db.Column(db.String(50), comment='付款方式')
+    refund_amount = db.Column(db.Float, default=0, comment='退款金额')
     city = db.Column(db.String(100), comment='客户所在城市')
     team_size = db.Column(db.String(50), comment='团队规模')
     project_share = db.Column(db.String(100), comment='项目分成')
@@ -56,6 +57,7 @@ class Customer(db.Model):
             'payment_status': self.payment_status or '',
             'payment_amount': self.payment_amount or 0,
             'payment_method': self.payment_method or '',
+            'refund_amount': self.refund_amount or 0,
             'city': self.city or '',
             'team_size': self.team_size or '',
             'project_share': self.project_share or '',
