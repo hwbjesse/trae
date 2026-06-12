@@ -122,6 +122,10 @@
                     <div class="stat-label">待付全</div>
                     <div class="stat-value">{{ pending_full_count }}</div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-label">总退款金额</div>
+                    <div class="stat-value" style="color:#ff4d4f">¥{{ "%.2f"|format(total_refund|float) }}</div>
+                </div>
             </div>
         </div>
 
@@ -241,7 +245,13 @@
                             </div>
                             <div class="info-item">
                                 <span class="info-label">退款金额:</span>
-                                <span class="info-value">¥{{ "%.2f"|format(c.refund_amount|float) }}</span>
+                                <span class="info-value" style="color:{% if c.refund_amount and c.refund_amount > 0 %}#ff4d4f{% endif %}">
+                                    {% if c.refund_amount and c.refund_amount > 0 %}
+                                    ¥{{ "%.2f"|format(c.refund_amount|float) }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                </span>
                             </div>
                         </div>
                     </div>

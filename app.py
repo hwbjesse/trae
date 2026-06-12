@@ -134,6 +134,7 @@ def index():
             pass
 
     pending_full_count = sum(1 for c in customers if c.payment_status != '付全款')
+    total_refund = sum(c.refund_amount or 0 for c in customers)
 
     payment_methods = {'收钱吧': 0, '银行卡': 0, '微信': 0}
     for c in customers:
@@ -150,6 +151,7 @@ def index():
     return render_template('index.html', customers=customers, search=search,
                            total_amount=total_amount, total_project_fee=total_project_fee,
                            pending_full_count=pending_full_count,
+                           total_refund=total_refund,
                            payment_methods=payment_methods, notice=notice)
 
 
